@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
+import { getGalleryData } from './service/api';
 
-const API_KEY = '36224530-0ce46c8c70d6d91971a56eb8c';
+
 
 class App extends Component {
   state = {
@@ -35,11 +35,6 @@ class App extends Component {
   handleCloseModal = () => {
     this.setState({ selectedImage: null });
   };
-
-  componentDidMount() {
-    this.fetchImages();
-  }
-
   componentDidUpdate(prevProps, prevState) {
     const { searchQuery, currentPage } = this.state;
     if (
@@ -51,16 +46,14 @@ class App extends Component {
   }
 
   fetchImages = async () => {
-    const { searchQuery, currentPage } = this.state;
+    const { searchQuery } = this.state;
     if (!searchQuery) return;
+    this.setState({ isLoading: true });
     try {
-      this.setState({ isLoading: true });
-      const response = await axios.get(
-        `https://pixabay.com/api/?q=${searchQuery}&page=${currentPage}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-      );
+      const response = await getGalleryData(this.state.searchQuery, this.state.currentPage)
       this.setState({
-        images: [...this.state.images, ...response.data.hits],
-        totalHits: response.data.totalHits,
+        images: [...this.state.images, ...response.hits],
+        totalHits: response.totalHits,
       });
     } catch (error) {
       console.error('Error fetching images:', error);
