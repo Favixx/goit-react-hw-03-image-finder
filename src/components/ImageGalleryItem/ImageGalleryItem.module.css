@@ -1,0 +1,18 @@
+.galleryItem {
+    display: block;
+    width: 400px;
+    height: 300px;
+}
+
+.galleryItemImage {
+    width: 320px;
+    height: 220px;
+    cursor: pointer;
+    transition: transform 200ms linear, box-shadow 200ms linear;
+}
+
+.galleryItemImage:hover,
+.galleryItemImage:focus {
+    transform: translateY(-3px);
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.419);
+}
